@@ -184,9 +184,10 @@ class LinkedList {
   insertAt(idx, val) {
     /*  Insert a new node at position idx with value val. */
     let counter = 0;
-    let finder = this.head;
+    let findNode = this.head;  // will be Node to advance a spot
+    let previous = null;    // will be Node to preceed new Node
     // Handle an empty list
-    if (finder == null) {
+    if (findNode == null) {
       throw new Error("ERROR: List is empty")
     }  // END if
     // Handle if insert is at very start of list (index position 0)
@@ -195,31 +196,17 @@ class LinkedList {
     }  // END if
 
     // retrieve the required index element
-    while (counter < idx && finder.next) {
-        finder = finder.next;
-        counter++;
-      if (counter < idx) {
+    while (counter < idx) {
+      // Check if at end of list
+      if (findNode == null){
         throw new Error("ERROR: List does not contain the requested index number")
-      }  // END if
+      }
+      previous = findNode;   // will be Node to preceed new Node
+      findNode = findNode.next;    // will be Node to advance a spot
+      counter++;
     }  // END while loop
     const newNode = new Node(val);
-    newNode.next = finder;
-
-    // retrieve the node prior to the required index element
-    let previous = this.head;
-    let counter2 = 0
-    // if the insert is not at index position 1, find it
-    if (counter2 != idx-1) {
-      while (counter2 < idx-1) {
-        if (previous.next) {
-          previous = previous.next;
-          counter++;
-        } else {
-          throw new Error("ERROR: Cannot insert at end of list; use push method instead")
-        }  // END if
-      }  // END while loop
-    }  // END if
-    // Update the previous node to have the inserted node next
+    newNode.next = findNode;
     previous.next = newNode;
     return true;
   }  // END insertAt()
