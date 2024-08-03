@@ -57,6 +57,7 @@ class LinkedList {
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
+      return;
     }
     // Set the tail of the LinkedList & the next of the legacy node
     this.tail.next = newNode;
@@ -162,7 +163,7 @@ class LinkedList {
     let finder = this.head;
     // Handle an empty list
     if (finder == null) {
-      throw new Error("ERROR: List is empty")
+      throw new Error("ERROR: List is empty. Use push method to add initial Node")
     }  // END if
 
     // retrieve the required index element
@@ -188,7 +189,7 @@ class LinkedList {
     let previous = null;    // will be Node to preceed new Node
     // Handle an empty list
     if (findNode == null) {
-      throw new Error("ERROR: List is empty")
+      throw new Error("ERROR: List is empty. Use ")
     }  // END if
     // Handle if insert is at very start of list (index position 0)
     if (idx == 0) {
@@ -208,41 +209,99 @@ class LinkedList {
     const newNode = new Node(val);
     newNode.next = findNode;
     previous.next = newNode;
-    return true;
   }  // END insertAt()
+
 
   /** removeAt(idx): return & remove item at idx, */
 
   removeAt(idx) {
+    /* Remove & return value at position idx. */
+    let counter = 0;
+    let findNode = this.head;  // will be Node to remove
+    let previous = null;    // will be Node to update next Node
+    // Handle an empty list
+    let futureNode = null;  // will be the new next Node
 
+    if (findNode == null) {
+      throw new Error("ERROR: List is empty")
+    }  // END if
+    // Handle a negative idx argument
+    if (idx < 0) {
+      throw new Error("ERROR: Invalid index submitted")
+    }  // END if
+     // remove the head of the list
+    if (idx == 0) { 
+      this.head = findNode.next;
+      return findNode;
+    } // END if
+
+    // retrieve the required index element
+    while (counter < idx) {
+      // Check if reached end of list
+      if (findNode == null){
+        throw new Error("ERROR: List does not contain the requested index number")
+      }
+      previous = findNode;   // will be Node to update next Node
+      // Check there is a Node to set as the new next Node
+      if (findNode.next){
+        findNode = findNode.next;    // will be Node to remove
+        futureNode = findNode.next;  // new next Node
+      } 
+      else {
+        // if there is no Node after the removed node
+        return findNode;   // defaults to null
+      }
+      counter++;
+    }  // END while loop
+    // update the Next node to bypass the removed Node
+    previous.next = futureNode;
+    return findNode;
   }
 
   /** average(): return an average of all values in the list */
 
   average() {
+    /* Given a linked list containing numbers, return the average of those numbers. */
+    let sum = 0;
+    let count = 0;
+    let currentNode = this.head;
+    while (currentNode) {
+      sum = sum + currentNode.val;
+      console.log("sum:", sum);
+      currentNode = currentNode.next;
+    }  // END while loop
     
-  }
+  }  // END average()
 
-}
+} // END LinkedList Class
 
-// module.exports = LinkedList;
+module.exports = LinkedList;
 
-
+/* =========  SEED LISTS  ============ */
 
 // Seed values (IIFE)
 const emptyList = (function() {
-  console.log("emptyList has been seeded:");
+  console.log("emptyList has been seeded");
   let emptyList = new LinkedList();
   return emptyList;
   })();
 
 const testList = (function() {
-  console.log("testList has been seeded:");
+  console.log("testList has been seeded");
   let testList = new LinkedList();
   testList.push("Car 1");
   testList.push("Car 2");
   testList.unshift("Engine");
-  testList.traverse();
   return testList;
 })();
 
+const numsList = (function() {
+  console.log("numsList has been seeded:");
+  let numsList = new LinkedList();
+  numsList.push(2);
+  numsList.push(4);
+  numsList.push(6);
+  numsList.push(8);
+  numsList.traverse();
+  return numsList;
+})();
